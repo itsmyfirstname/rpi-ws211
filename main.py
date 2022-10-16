@@ -1,4 +1,5 @@
 import time
+from typing import Tuple
 from rpi_ws281x import PixelStrip, Color, ws
 
 # LED strip configuration:
@@ -39,12 +40,45 @@ class OutdoorLights(PixelStrip):
             lights.setPixelColor(i,color)
             lights.show()
             time.sleep(ms_delay/1000)
+    
+    def wipe(self):
+        for i in range(self.led_count):
+            self.setPixelColor(i,Color(0,0,0,0))
+        self.show()    
+        self._cleanup()
+    
+    def skip(self, primary:Color, skipper: Color, ms_delay:int = 1000):
+        while True:
+            prev = 0
+            for i in range(self.led_count):
+                if i == 0:
+                    self.setPixelColor(i,skipper)
+                    self.show()
+                else:
+                    self.setPixelColor(i-1,primary)
+                    self.setPixelColor(i,skipper)
+                    self.show()
+                    time.sleep(ms_delay/1000)
+                    self.setPixelColor(i,primary)
+
+        
+
 
 
 lights=OutdoorLights()
 
 lights.begin()
 
-while True:
-    lights.swipe(color=Color(150,0,200), ms_delay=15)
-    lights.swipe(color=Color(255,50,0), ms_delay=15)
+
+lights.skip(primary=Color(150,0,200), skipper=Color(255,50,0), ms_delay=150)
+
+# counter = 0
+# _continue = True
+# while _continue:
+#     lights.swipe(color=Color(150,0,200), ms_delay=15)
+#     lights.swipe(color=Color(255,50,0), ms_delay=15)
+#     counter += 1
+#     if counter >10:
+#         lights.wipe()
+#         _continue = False
+
