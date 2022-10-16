@@ -11,9 +11,6 @@ LED_INVERT = False    # True to invert the signal (when using NPN transistor lev
 LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 LED_STRIP_TYPE = ws.WS2811_STRIP_RGB
 
-
-
-
 class OutdoorLights(PixelStrip):
     led_count = 50        
     led_pin = 18          
